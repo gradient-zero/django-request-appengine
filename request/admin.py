@@ -15,7 +15,7 @@ from .traffic import modules
 
 
 class RequestAdmin(admin.ModelAdmin):
-    list_display = ('time', 'path', 'response', 'method', 'request_from')
+    list_display = ('time', 'path', 'response', 'method', 'request_from', 'anonymous_order')
     fieldsets = (
         (_('Request'), {
             'fields': ('method', 'path', 'time', 'is_secure', 'is_ajax')
@@ -24,7 +24,7 @@ class RequestAdmin(admin.ModelAdmin):
             'fields': ('response',)
         }),
         (_('User info'), {
-            'fields': ('referer', 'user_agent', 'ip', 'user', 'language')
+            'fields': ('referer', 'user_agent', 'ip', 'user', 'language', 'anonymous_order')
         })
     )
     raw_id_fields = ('user',)

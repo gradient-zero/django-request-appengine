@@ -35,6 +35,7 @@ class Request(models.Model):
     referer = models.URLField(_('referer'), max_length=255, blank=True, null=True)
     user_agent = models.CharField(_('user agent'), max_length=255, blank=True, null=True)
     language = models.CharField(_('language'), max_length=255, blank=True, null=True)
+    anonymous_order = models.CharField(max_length=64, blank=True, null=True)
 
     objects = RequestManager()
 
@@ -59,7 +60,7 @@ class Request(models.Model):
         self.is_ajax = request_is_ajax(request)
 
         # User information.
-        self.ip = request.META.get('REMOTE_ADDR', '')
+        self.ip = request.headers.get('x-appengine-user-ip', '127.0.0.1')
         self.referer = request.META.get('HTTP_REFERER', '')[:255]
         self.user_agent = request.META.get('HTTP_USER_AGENT', '')[:255]
         self.language = request.META.get('HTTP_ACCEPT_LANGUAGE', '')[:255]
@@ -68,6 +69,8 @@ class Request(models.Model):
             is_authenticated = request.user.is_authenticated
             if is_authenticated:
                 self.user = request.user
+            else:
+                self.anonymous_order = request.session.get('anonymous_order')
 
         if response:
             self.response = response.status_code
