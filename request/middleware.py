@@ -21,7 +21,7 @@ class RequestMiddleware(MiddlewareMixin):
         if request_is_ajax(request) and settings.IGNORE_AJAX:
             return response
 
-        if request.META.get('REMOTE_ADDR') in settings.IGNORE_IP:
+        if request.headers.get('x-appengine-user-ip', '') in settings.IGNORE_IP:
             return response
 
         ignore = Patterns(False, *settings.IGNORE_USER_AGENTS)
